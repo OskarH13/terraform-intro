@@ -46,6 +46,31 @@ resource "aws_subnet" "main_private_subnet_a_prod" {
   
 }
 
+# Public subnet
+resource "aws_subnet" "main_public_subnet_b_prod" {
+    vpc_id = aws_vpc.main_vpc_prod.id
+    cidr_block = "10.0.16.0/20"
+    availability_zone = "eu-central-1b"
+    map_public_ip_on_launch = true
+
+    tags = {
+        Name = "main-prod-public-subnet-b"
+    }
+  
+}
+
+# Private subnet
+resource "aws_subnet" "main_private_subnet_b_prod" {
+    vpc_id = aws_vpc.main_vpc_prod.id
+    cidr_block = "10.0.144.0/20"
+    availability_zone = "eu-central-1b"
+
+    tags = {
+        Name = "main-prod-private-subnet-b"
+    }
+  
+}
+
 # Public Route Table
 resource "aws_route_table" "public_rtb_prod" {
     vpc_id = aws_vpc.main_vpc_prod.id
@@ -62,8 +87,13 @@ resource "aws_route_table" "public_rtb_prod" {
 }
 
 # Public Subnet to Public Route Table Association
-resource "aws_route_table_association" "public_rtb_subnet_assoc_prod" {
+resource "aws_route_table_association" "public_rtb_subnet_assoc_prod-a" {
     subnet_id = aws_subnet.main_public_subnet_a_prod.id
+    route_table_id = aws_route_table.public_rtb_prod.id
+}
+
+resource "aws_route_table_association" "public_rtb_subnet_assoc_prod-b" {
+    subnet_id = aws_subnet.main_public_subnet_b_prod.id
     route_table_id = aws_route_table.public_rtb_prod.id
 }
 
